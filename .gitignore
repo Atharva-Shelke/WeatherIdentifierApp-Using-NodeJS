@@ -4,3 +4,5 @@
 .classpath
 bin/
 target/
+node_modules/
+.env
