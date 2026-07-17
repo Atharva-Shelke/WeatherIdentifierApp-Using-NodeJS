@@ -5,30 +5,64 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
   </head>
-  <body>
-    <center>
-      <div class="box">
+  <body class="{%bgclass%}">
+    <div class="container">
+      <div class="glass">
+        <h1>Weather Dashboard</h1>
         <form action="/weather" method="GET">
-          <h2>Which city?</h2>
-          <input
-            type="search"
-            name="city"
-            placeholder="Enter city"
-            required
-          /><br /><br />
-          <input type="submit" value="Search" />
+          <input type="search" name="city" placeholder="Search city..." required />
+          <button>
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Search
+          </button>
         </form>
-        <p style="color: red">{%error%}</p>
-        <div class="Info" style="display:{%display%};">
-          <h1>Weather in {%location%},{%country%}</h1>
-          <h2>Temperature : {%tempval%} &deg;c</h2>
-          <h3>Maximum : {%tempmax%} &deg;c | Minimum : {%tempmin%} &deg;c</h3>
-          <h2>Sky Conditions : {%main%}-{%description%}</h2>
-          <h3 id="date"></h3>
+
+        <p class="error">{%error%}</p>
+
+        <div class="weather-card" style="display:{%display%};">
+          <img src="https://openweathermap.org/img/wn/{%icon%}@4x.png" class="weather-icon" />
+
+          <h1 class="temperature">{%tempval%}&deg;</h1>
+
+          <h2>{%location%}, {%country%}</h2>
+
+          <p class="description">{%main%} - {%description%}</p>
+
+          <div class="details">
+            <div class="detail-box">
+              <i class="fa-solid fa-temperature-half"></i>
+              <span>Feels Like</span>
+              <strong>{%feelslike%}&deg;C</strong>
+            </div>
+
+            <div class="detail-box">
+              <i class="fa-solid fa-droplet"></i>
+              <span>Humidity</span>
+              <strong>{%humidity%}%</strong>
+            </div>
+
+            <div class="detail-box">
+              <i class="fa-solid fa-wind"></i>
+              <span>Wind</span>
+              <strong>{%wind%} m/s</strong>
+            </div>
+
+            <div class="detail-box">
+              <i class="fa-solid fa-gauge-high"></i>
+              <span>Pressure</span>
+              <strong>{%pressure%} hPa</strong>
+            </div>
+          </div>
+
+          <p id="date"></p>
         </div>
       </div>
-    </center>
+    </div>
 
     <script>
       const curDate = document.getElementById("date");
@@ -46,7 +80,6 @@
         weekday[6] = "Saturday";
 
         let currentTime = new Date();
-        console.log(weekday[currentTime.getDay()]);
         let day = weekday[currentTime.getDay()];
         return day;
       };
@@ -69,15 +102,10 @@
         var now = new Date();
         var year = now.getFullYear();
         var month = months[now.getMonth()];
-
-        <!-- var month=now.getMonth()+1; -->
         var date = now.getDate();
-
-        console.log(month + "/" + date);
 
         let hours = now.getHours();
         let mins = now.getMinutes();
-
         let period = "AM";
 
         if (hours > 11) {
@@ -90,8 +118,6 @@
         }
 
         return `${date} ${month} ${year} | ${hours}:${mins} ${period}`;
-
-        console.log(month + "/" + day);
       };
       curDate.innerHTML = getCurrentDay() + " | " + getCurrentTime();
     </script>
