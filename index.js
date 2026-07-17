@@ -21,7 +21,42 @@ const replaceVal = (tempVal, orgVal, cityName) => {
     output = output.replace("{%display%}", "block");
     output = output.replace("{%city%}", cityName);
     output = output.replace("{%error%}", "");
+    output = output.replace("{%humidity%}", orgVal.main.humidity);
+    output = output.replace("{%pressure%}", orgVal.main.pressure);
+    output = output.replace("{%feelslike%}", orgVal.main.feels_like.toFixed(1));
+    output = output.replace("{%wind%}", orgVal.wind.speed);
+    output = output.replace("{%icon%}", orgVal.weather[0].icon);
 
+    let bgClass = "default-bg";
+
+    switch (orgVal.weather[0].main.toLowerCase()) {
+        case "clear":
+            bgClass = "sunny";
+            break;
+        case "clouds":
+            bgClass = "clouds";
+            break;
+        case "rain":
+            bgClass = "rain";
+            break;
+        case "drizzle":
+            bgClass = "drizzle";
+            break;
+        case "thunderstorm":
+            bgClass = "thunderstorm";
+            break;
+        case "snow":
+            bgClass = "snow";
+            break;
+        case "mist":
+        case "fog":
+        case "haze":
+        case "smoke":
+            bgClass = "mist";
+            break;
+    }
+
+    output = output.replace("{%bgclass%}", bgClass);
     return output;
 };
 
@@ -30,12 +65,19 @@ const server = http.createServer((req, res) => {
     const pathname = parsedUrl.pathname;
     const city = parsedUrl.query.city;
 
+    if (req.url === "/styles.css") {
+        res.writeHead(200, { "Content-Type": "text/css" });
+        res.end(fs.readFileSync("./styles.css"));
+        return;
+    }
+
     if (pathname === "/") {
         let output = homeFile;
 
         output = output.replace("{%display%}", "none"); // hide weather
         output = output.replace("{%city%}", ""); // clear city
         output = output.replace("{%error%}", ""); // clear error
+        output = output.replace("{%bgclass%}", "default-bg");
 
         res.write(output);
         res.end();
@@ -74,5 +116,5 @@ const server = http.createServer((req, res) => {
     }
 });
 
-server.listen(8000, "127.0.0.1");
+server.listen(8000);
 console.log("Exit");
